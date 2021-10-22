@@ -11,6 +11,8 @@ spring:
     cache: false
     template-loader-path: classpath:/templates
     suffix: .ftl
+  jwt:
+    secret: secret!@#$%_12345
 ---
 spring:
   config:

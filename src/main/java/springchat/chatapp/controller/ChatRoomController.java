@@ -1,11 +1,15 @@
 package springchat.chatapp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springchat.chatapp.dto.ChatRoom;
+import springchat.chatapp.dto.LoginInfo;
 import springchat.chatapp.repository.ChatRoomReposiroy;
+import springchat.chatapp.service.JwtTokenProvider;
 
 import java.util.List;
 
@@ -14,6 +18,7 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatRoomController {
     private final ChatRoomReposiroy chatRoomReposiroy;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 채팅 리스트 화면
     @GetMapping("/room")
@@ -47,5 +52,13 @@ public class ChatRoomController {
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId){
         return chatRoomReposiroy.findRoomById(roomId);
+    }
+
+    @GetMapping("/user")
+    @ResponseBody
+    public LoginInfo loginInfo(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        return LoginInfo.builder().name(name).token(jwtTokenProvider.generateToken(name)).build();
     }
 }
