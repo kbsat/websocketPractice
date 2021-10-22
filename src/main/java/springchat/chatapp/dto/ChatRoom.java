@@ -17,6 +17,7 @@ public class ChatRoom implements Serializable {
     private static final long serialVersionUID = 649486934543940932L;
     private String roomId;
     private String name;
+    private long userCount; // 채팅방 인원수
 
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();

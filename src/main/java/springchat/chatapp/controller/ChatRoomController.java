@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springchat.chatapp.dto.ChatRoom;
 import springchat.chatapp.dto.LoginInfo;
-import springchat.chatapp.repository.ChatRoomReposiroy;
+import springchat.chatapp.repository.ChatRoomRepository;
 import springchat.chatapp.service.JwtTokenProvider;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
-    private final ChatRoomReposiroy chatRoomReposiroy;
+    private final ChatRoomRepository chatRoomRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     // 채팅 리스트 화면
@@ -30,14 +30,16 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room(){
-        return chatRoomReposiroy.findAllRoom();
+        List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom();
+        chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
+        return chatRooms;
     }
 
     // 채팅방 생성
     @PostMapping("/room")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam String name){
-        return chatRoomReposiroy.createChatRoom(name);
+        return chatRoomRepository.createChatRoom(name);
     }
 
     // 채팅방 입장 화면
@@ -51,7 +53,7 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId){
-        return chatRoomReposiroy.findRoomById(roomId);
+        return chatRoomRepository.findRoomById(roomId);
     }
 
     @GetMapping("/user")
