@@ -1,10 +1,7 @@
 spring:
   profiles:
-    active: alpha
-  redis:
-    host: localhost
-    port: 6379
-#  개발 할 때 static 파일을 재시작 하지 않아도 불러올 수 있게 된다.
+    active: local
+  #  개발 할 때 static 파일을 재시작 하지 않아도 불러올 수 있게 된다.
   devtools:
     livereload:
       enabled: true
@@ -14,9 +11,20 @@ spring:
     cache: false
     template-loader-path: classpath:/templates
     suffix: .ftl
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  redis:
+    host: localhost
+    port: 6380
+---
 #  alpha 서버용 환경 설정
-#  profiles:
-#    active: alpha
-#  redis:
-#    host: localhost
-#    port: redis가 설치된 서버 포트
+spring:
+  config:
+    activate:
+      on-profile: alpha
+  redis:
+    host: localhost
+    port: 6379
